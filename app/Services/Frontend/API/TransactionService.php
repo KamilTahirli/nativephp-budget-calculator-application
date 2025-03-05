@@ -34,6 +34,26 @@ class TransactionService
         return view('frontend.partials.render.__transaction_item', compact('transaction'))->render();
     }
 
+    /**
+     * @param Transaction $transaction
+     * @param TransactionSaveOrUpdateRequest $request
+     * @return string
+     */
+    public function updateTransaction(Transaction $transaction, TransactionSaveOrUpdateRequest $request): string
+    {
+        $transaction->update([
+            'user_id' => auth()->user()->id,
+            'category_id' => $request->input('categoryId'),
+            'amount' => $request->input('amount'),
+            'memo' => $request->input('memo'),
+            'date' => $request->input('date') ?? now()->format('Y-m-d'),
+        ]);
+
+        $transaction->load(['category:id,name,icon_code,type']);
+
+        return view('frontend.partials.render.__transaction_item', compact('transaction'))->render();
+    }
+
 
     /**
      * @param TransactionListRequest $request

@@ -39,11 +39,6 @@ class ProfileController extends Controller
     }
 
 
-    /**
-     * @param ProfileUpdateRequest $request
-     * @param User $user
-     * @return RedirectResponse
-     */
     public function updateProfile(ProfileUpdateRequest $request, User $user)
     {
         try {
@@ -62,7 +57,7 @@ class ProfileController extends Controller
      * @param User $user
      * @return RedirectResponse
      */
-    public function updatePassword(UserPasswordUpdateRequest $request, User $user)
+    public function updatePassword(UserPasswordUpdateRequest $request, User $user): RedirectResponse
     {
         try {
             if (auth()->user()->id === $user->id) {

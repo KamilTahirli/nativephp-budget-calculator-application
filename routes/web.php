@@ -25,10 +25,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
     Route::get('/profile/{user}', [ProfileController::class, 'profile'])->name('profile.index');
     Route::put('/profile/{user}', [ProfileController::class, 'updateProfile'])->name('profile.update');
-    Route::post('/password-update/{user}', [ProfileController::class, 'updatePassword'])->name('user.password.update');
+    Route::put('/password-update/{user}', [ProfileController::class, 'updatePassword'])->name('user.password.update');
     Route::get('/categories', [CategoryController::class, 'getCategories'])->name('categories');
     Route::get('/transactions', [TransactionController::class, 'list'])->name('transactions.list');
     Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
+    Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
+    Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transactions.update');
     Route::get('/calculate/total-balance', [TransactionController::class, 'calculateTotalBalance'])->name('transactions.calculate.total-balance');
     Route::post('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
 });

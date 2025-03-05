@@ -100,6 +100,7 @@
                                                 <th>@lang('site.user.type')</th>
                                                 <th>@lang('site.user.date')</th>
                                                 <th>@lang('site.user.memory')</th>
+                                                <th>@lang('site.user.amount')</th>
                                                 <th>@lang('site.user.transactions')</th>
                                             </tr>
                                             </thead>
@@ -115,8 +116,9 @@
             </div>
         </div>
     </div>
-    @include('frontend.partials.modals.__generate_report')
     @include('frontend.partials.modals.__add_new_process')
+    @include('frontend.partials.modals.__edit_transaction')
+    @include('frontend.partials.modals.__generate_report')
     @include('frontend.partials.modals.__filter_items')
 @endsection
 
@@ -166,9 +168,31 @@
                     });
             }
 
+            function destroy() {
+                $(document).on("click", ".delete-btn", async function () {
+                    const selectedTransactionData = $(this).data("delete-transaction");
+                    const deleteTransactionRoute = '{{ route("transactions.destroy", ["transaction" => ":transactionId"]) }}'
+                        .replace(':transactionId', selectedTransactionData.id);
+
+                    if (confirm(`{{ __('site.alert.do_you_want_to_delete') }}`)) {
+                        try {
+                            const response = await axios.delete(deleteTransactionRoute);
+
+                            if (response.status === 200) {
+                                location.reload();
+                            }
+                        } catch (error) {
+                            alert(`{{ __('site.response.an_error_occurred') }}`);
+                            console.error(error);
+                        }
+                    }
+                });
+            }
+
+            destroy();
             function showLessTransactions() {
 
-                let showLessLimit = `{{ LimitConst::user_TRANSACTION_LIMIT }}`;
+                let showLessLimit = `{{ LimitConst::USER_TRANSACTION_LIMIT }}`;
 
                 let items = $(".table-item");
 
@@ -190,6 +214,8 @@
                     });
                 }
             }
+
+
 
 
             window.calculateTotalBalance = calculateTotalBalance;

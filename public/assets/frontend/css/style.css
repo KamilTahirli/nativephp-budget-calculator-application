@@ -6738,7 +6738,6 @@ textarea.form-control-lg {
 .modal.fade .modal-dialog {
     -webkit-transition: -webkit-transform 0.3s ease-out;
     transition: -webkit-transform 0.3s ease-out;
-    transition: transform 0.3s ease-out;
     transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
     -webkit-transform: translate(0, -50px);
     transform: translate(0, -50px);
@@ -21068,6 +21067,11 @@ figure > img:hover {
     color: #ef4e4e;
 }
 
+.edit-error-msg {
+    margin-top: 5px;
+    color: #ef4e4e;
+}
+
 .active-tab {
     background: #2F2CD8;
     color: #fff !important;
@@ -21080,6 +21084,15 @@ figure > img:hover {
 .expense-tab {
     border: 2px solid #2F2CD8;
 }
+
+.edit-income-tab {
+    border: 2px solid #2F2CD8;
+}
+
+.edit-expense-tab {
+    border: 2px solid #2F2CD8;
+}
+
 
 #datepicker {
     margin: 0 !important;
@@ -21105,6 +21118,18 @@ figure > img:hover {
     border: 1px solid #57337e;
 }
 
+.edit-btn {
+    width: 34px !important;
+    padding: 8px 13px !important;
+    background: rgba(244, 123, 32, 0.91) !important;
+    border: 1px solid #ff6a00 !important;
+    color: #fff !important;
+}
+
+.delete-btn {
+    width: 35px !important;
+    padding: 8px 13px !important;
+}
 
 .filter-btn:hover {
     background: #4b2a6e !important;
@@ -21130,5 +21155,26 @@ figure > img:hover {
     background: #324a7e !important;
 }
 
+
+.equal-height-cards {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.equal-height-cards .col-xxl-6,
+.equal-height-cards .col-xl-6,
+.equal-height-cards .col-lg-6 {
+    display: flex;
+}
+
+.equal-height-cards .card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.equal-height-cards .card-body {
+    flex: 1;
+}
 
 /*# sourceMappingURL=style.css.map */

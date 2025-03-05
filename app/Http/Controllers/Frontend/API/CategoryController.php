@@ -30,7 +30,7 @@ class CategoryController extends Controller
             return $this->successResponse(data: $categories);
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
-            return $this->errorResponse("Category fetch problem");
+            return $this->errorResponse(__('site.response.an_error_occurred'));
         }
     }
 }

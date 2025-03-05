@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Frontend\CalculateTotalBalanceRequest;
 use App\Http\Requests\Frontend\TransactionListRequest;
 use App\Http\Requests\Frontend\TransactionSaveOrUpdateRequest;
+use App\Models\Transaction;
 use App\Services\Frontend\API\TransactionService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -30,7 +31,7 @@ class TransactionController extends Controller
             return $this->successResponse(data: $transaction);
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
-            return $this->errorResponse("Serverdə xəta baş verdi!");
+            return $this->errorResponse(__('site.response.an_error_occurred'));
         }
     }
 
@@ -42,10 +43,41 @@ class TransactionController extends Controller
     {
         try {
             $transaction = $this->transactionService->createTransaction($request);
-            return $this->successResponse("Tranzaksiya uğurla əlavə edildi!", $transaction);
+            return $this->successResponse(__('site.response.transaction_added'), $transaction);
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
-            return $this->errorResponse("Tranzaksiya əlavə edilə bilmədi");
+            return $this->errorResponse(__('site.response.an_error_occurred'));
+        }
+    }
+
+
+    public function destroy(Transaction $transaction): JsonResponse
+    {
+        try {
+            if ($transaction->user_id !== auth()->id()) {
+                return $this->errorResponse(__('site.response.you_dont_have_permission'), 403);
+            }
+
+            $transaction->delete();
+            return $this->successResponse(data: $transaction);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            return $this->errorResponse(__('site.response.an_error_occurred'));
+        }
+    }
+
+    public function update(Transaction $transaction, TransactionSaveOrUpdateRequest $request): JsonResponse
+    {
+        try {
+            if ($transaction->user_id !== auth()->id()) {
+                return $this->errorResponse(__('site.response.you_dont_have_permission'), 403);
+            }
+
+            $transaction = $this->transactionService->updateTransaction($transaction, $request);
+            return $this->successResponse(__('site.response.transaction_updated'), $transaction);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            return $this->errorResponse(__('site.response.an_error_occurred'));
         }
     }
 
@@ -60,7 +92,7 @@ class TransactionController extends Controller
             return $this->successResponse(data: $transactions);
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
-            return $this->errorResponse("Serverdə xəta baş verdi!");
+            return $this->errorResponse(__('site.response.an_error_occurred'));
         }
     }
 }
