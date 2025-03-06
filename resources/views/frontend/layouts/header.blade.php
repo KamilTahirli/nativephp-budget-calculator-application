@@ -29,7 +29,7 @@
                                             <img class="rounded-full"
                                                  width="40"
                                                  height="40"
-                                                 src="{{ asset(auth()->user()->photo ? 'storage/profile/'. auth()->user()->photo : 'assets/frontend/images/avatar/no_photo.webp') }}" alt="">
+                                                 src="{{ asset(auth()->user()->photo ? 'storage/profile/'. auth()->user()->photo : 'images/avatar/no_photo.webp') }}" alt="">
                                         </span>
                                             <div class="user-info">
                                                 <h5>{{ auth()->user()->name }}</h5>

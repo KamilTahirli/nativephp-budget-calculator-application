@@ -17,14 +17,16 @@ class UserSeeder extends Seeder
     {
         $email = "admin@gmail.com";
 
-        if (!$user = User::where('email', $email)->exists()) {
-            User::create([
+        User::updateOrCreate(
+            [
+                'email' => $email
+            ],
+            [
                 'name' => "Admin",
                 'email' => "admin@gmail.com",
                 'email_verified_at' => now(),
                 'password' => bcrypt('admin555'),
                 'remember_token' => Str::random(10),
             ]);
-        }
     }
 }

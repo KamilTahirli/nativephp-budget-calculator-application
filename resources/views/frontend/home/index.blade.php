@@ -159,7 +159,10 @@
             getTransactions();
 
             function resetModals() {
-                $('#filterItemsModal').modal('hide');
+                let filterModal = $('#filterItemsModal');
+                if (filterModal.hasClass('show')) {
+                    $(filterModal).modal('hide');
+                }
             }
 
             function calculateTotalBalance(calculationDate = null) {

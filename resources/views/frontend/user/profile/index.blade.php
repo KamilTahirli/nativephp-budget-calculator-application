@@ -24,7 +24,6 @@
             </div>
 
             <div class="col-xxl-12 col-xl-12">
-
                 <div class="row equal-height-cards">
                     <div class="col-xxl-6 col-xl-6 col-lg-6">
                         <div class="card">
@@ -46,7 +45,7 @@
                                             <div class="error-msg">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="col-xxl-12 col-12 mb-3">
+                                        <div class="col-xxl-12 col-12 mb-1">
                                             <label class="form-label">@lang('site.auth.email')</label>
                                             <input type="email"
                                                    class="form-control"
@@ -55,11 +54,11 @@
                                             <div class="error-msg">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="col-xxl-12 col-12 mb-3">
+                                        <div class="col-xxl-12 col-12 mb-1">
                                             <div class="d-flex align-items-center">
                                                 <img
                                                     class="me-3 rounded-circle me-0 me-sm-3"
-                                                    src="{{ asset($user->photo ? 'storage/profile/' . $user->photo : 'assets/frontend/images/avatar/no_photo.webp' ) }}"
+                                                    src="{{ asset($user->photo ? 'storage/profile/' . $user->photo : 'images/avatar/no_photo.webp' ) }}"
                                                     width="55" height="55"
                                                     alt="">
                                                 <div class="media-body">
@@ -67,7 +66,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xxl-12 col-12 mb-3">
+                                        <div class="col-xxl-12 col-12 mb-1">
                                             <div class="form-file">
                                                 <input type="file" name="photo" class="form-file-input" id="customFile">
                                                 @error('photo')
@@ -75,7 +74,7 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="col-xxl-12 col-12 mb-3">
+                                        <div class="col-xxl-12 col-12 mb-2">
                                             <button type="submit"
                                                     class="btn btn-success">@lang('site.user.save')</button>
                                         </div>
