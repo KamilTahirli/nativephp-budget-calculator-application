@@ -22,6 +22,7 @@ class ReportController extends Controller
 
     public function generate(GenerateReportRequest $request)
     {
+        //coming soon
         try {
             $transactions = $this->transactionService->getTransactions($request, true, false);
             if ($transactions->isEmpty()) {
@@ -29,7 +30,7 @@ class ReportController extends Controller
             } else {
                 $filePath = 'reports/reports.xlsx';
                 Excel::store(new TransactionExportExcel($transactions), $filePath, 'local');
-                $this->nativeAlertNotify(__('site.response.success'), 'smdmkdndk');
+                $this->nativeAlertNotify(__('site.response.success'), 'coming soon!');
             }
         } catch (Exception $exception) {
             Log::error($exception->getMessage());

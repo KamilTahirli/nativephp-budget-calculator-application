@@ -23,10 +23,8 @@
                                     <i class="fa-solid fa-filter"></i>
                                 </button>
                                 <button type="button"
-                                        class="btn btn-danger d-flex justify-content-center align-items-center me-1"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#generateReportModal">
-                                    @lang('site.user.report')
+                                        class="btn btn-secondary refresh-btn d-flex justify-content-center align-items-center me-1">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
                                 </button>
                                 <button type="button"
                                         class="btn btn-primary"
@@ -34,6 +32,12 @@
                                         data-bs-target="#addNewProcessModal">
                                     @lang('site.user.add')
                                 </button>
+                                {{--                                <button type="button"--}}
+                                {{--                                        class="btn btn-danger d-flex justify-content-center align-items-center me-1"--}}
+                                {{--                                        data-bs-toggle="modal"--}}
+                                {{--                                        data-bs-target="#generateReportModal">--}}
+                                {{--                                    @lang('site.user.report')--}}
+                                {{--                                </button>--}}
                             </div>
                         </div>
                     </div>
@@ -118,8 +122,9 @@
     </div>
     @include('frontend.partials.modals.__add_new_process')
     @include('frontend.partials.modals.__edit_transaction')
-    @include('frontend.partials.modals.__generate_report')
     @include('frontend.partials.modals.__filter_items')
+
+    {{--    @include('frontend.partials.modals.__generate_report')--}}
 @endsection
 
 @section('front_scripts')
@@ -146,12 +151,16 @@
                     })
                     .finally(() => {
                         showLessTransactions();
+                        resetModals();
                     });
             }
 
             window.getTransactions = getTransactions;
             getTransactions();
 
+            function resetModals() {
+                $('#filterItemsModal').modal('hide');
+            }
 
             function calculateTotalBalance(calculationDate = null) {
                 calculationDate = calculationDate == null ? currentDateTime : calculationDate;
@@ -190,6 +199,16 @@
             }
 
             destroy();
+
+            function refreshPage() {
+                $(document).on("click", ".refresh-btn", function () {
+                    location.reload();
+                });
+            }
+
+            refreshPage();
+
+
             function showLessTransactions() {
 
                 let showLessLimit = `{{ LimitConst::USER_TRANSACTION_LIMIT }}`;
@@ -197,7 +216,7 @@
                 let items = $(".table-item");
 
                 if (items.length === 0) {
-                    $("#loadMore").append(`<div id="list-empty" class="alert alert-warning">${listEmpty}</div>`);
+                    $("#loadMore").append(`<div id="list-empty" class="alert alert-warning text-center">${listEmpty}</div>`);
                 } else if (items.length > showLessLimit) {
                     items.slice(showLessLimit).hide();
 
@@ -214,8 +233,6 @@
                     });
                 }
             }
-
-
 
 
             window.calculateTotalBalance = calculateTotalBalance;

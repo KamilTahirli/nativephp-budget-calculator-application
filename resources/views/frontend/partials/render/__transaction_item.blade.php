@@ -46,7 +46,7 @@
     @endforeach
 
     <tr>
-        <td colspan="5" class="text-center" id="loadMore"></td>
+        <td colspan="7" class="text-center" id="loadMore"></td>
     </tr>
 @elseif(isset($transaction))
     @php renderTransactionRow($transaction); @endphp

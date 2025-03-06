@@ -21111,12 +21111,6 @@ figure > img:hover {
     font-size: 12px;
 }
 
-.filter-btn {
-    width: 35px !important;
-    padding: 8px 20px !important;
-    background: #57337e;
-    border: 1px solid #57337e;
-}
 
 .edit-btn {
     width: 34px !important;
@@ -21131,21 +21125,41 @@ figure > img:hover {
     padding: 8px 13px !important;
 }
 
+.filter-btn {
+    width: 35px !important;
+    padding: 8px 20px !important;
+    background: #5b3d60;
+    border: 1px solid #5b3d60;
+}
+
 .filter-btn:hover {
-    background: #4b2a6e !important;
+    background: #5b3d60 !important;
 }
 
 .filter-btn:active {
-    background: #4b2a6e !important;
+    background: #5b3d60 !important;
 }
 
+.refresh-btn {
+    width: 35px !important;
+    padding: 8px 20px !important;
+    background: #4d5742;
+    border: 1px solid #4d5742;
+}
+
+.refresh-btn:hover {
+    background: #4d5742 !important;
+}
+
+.refresh-btn:active {
+    background: #4d5742 !important;
+}
 
 .load-more-btn {
     background: #324a7e;
     padding: 8px 20px !important;
     border: 1px solid #324a7e;
 }
-
 
 .load-more-btn:hover {
     background: #324a7e !important;
