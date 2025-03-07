@@ -4,7 +4,7 @@ namespace App\Http\Requests\Frontend;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CalculateTotalBalanceRequest extends FormRequest
+class CalculateBudgetRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

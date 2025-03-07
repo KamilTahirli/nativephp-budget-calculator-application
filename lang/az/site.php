@@ -64,6 +64,7 @@ return [
         'delete_success' => 'Uğurlu silindi!',
         'an_error_occurred' => 'Bir xəta baş verdi!',
         'transaction_added' => 'Tranzaksiya uğurla əlavə edildi!',
+        'transaction_deleted' => 'Tranzaksiya uğurla silindi!',
         'transaction_updated' => 'Tranzaksiya uğurla yeniləndi!',
         'you_dont_have_permission' => 'Buna icazəniz yoxdur!'
     ],

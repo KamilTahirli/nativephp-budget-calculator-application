@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Frontend;
 
+use App\Rules\User\CheckOldPasswordRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserPasswordUpdateRequest extends FormRequest
@@ -19,9 +20,9 @@ class UserPasswordUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'old_password' => 'required',
-            'new_password' => 'required',
-            'confirm_password' => 'required'
+            'old_password' => ['required', new CheckOldPasswordRule()],
+            'new_password' => ['required'],
+            'confirm_password' => ['required', 'same:new_password'],
         ];
     }
 }

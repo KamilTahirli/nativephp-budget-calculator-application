@@ -136,12 +136,12 @@
             let showMore = `{{ __('site.user.show_more') }}`;
             let showLess = `{{ __('site.user.show_less') }}`;
 
-            function getTransactions(transactionDate = null, page = 1) {
+            function getTransactions(transactionDate = null) {
                 transactionDate = transactionDate == null ? currentDateTime : transactionDate;
                 const transactionList = $('#transactionList');
                 const route = `{{ route('transactions.list') }}`;
 
-                axios.get(route, {params: {date: transactionDate, page: page}})
+                axios.get(route, {params: {date: transactionDate}})
                     .then(response => {
                         transactionList.html(response.data.result ?? '');
                         $('#pagination-links').html(response.data.pagination ?? '');
@@ -167,7 +167,7 @@
 
             function calculateTotalBalance(calculationDate = null) {
                 calculationDate = calculationDate == null ? currentDateTime : calculationDate;
-                const route = `{{ route('transactions.calculate.total-balance') }}`
+                const route = `{{ route('transactions.calculate.budget') }}`
                 axios.get(route, {params: {calculationDate}})
                     .then((response) => {
                         let total = response.data.result;

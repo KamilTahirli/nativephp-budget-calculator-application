@@ -16,10 +16,6 @@ class NativeAppServiceProvider implements ProvidesPhpIni
      */
     public function boot(): void
     {
-//        Artisan::call('migrate', ['--force' => true]);
-//        Artisan::call('native:migrate', ['--force' => true]);
-//        Artisan::call('native:db:seed', ['--force' => true]);
-//        Artisan::call('optimize:clear');
 
         $config = Config::where('seeded', false)->first();
         if ($config) {
@@ -28,7 +24,8 @@ class NativeAppServiceProvider implements ProvidesPhpIni
 
         Menu::create(
             Menu::file(),
-            Menu::window(),
+            Menu::view(),
+            Menu::window()
         );
 
         Window::open()

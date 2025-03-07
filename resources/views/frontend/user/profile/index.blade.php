@@ -88,7 +88,7 @@
                             <div class="card-header">
                             </div>
                             <div class="card-body">
-                                <form action="{{ route('user.password.update', $user->id) }}" method="POST">
+                                <form action="{{ route('profile.password.update', $user->id) }}" method="POST">
                                     @csrf
                                     @method('PUT')
                                     <div class="row g-3">

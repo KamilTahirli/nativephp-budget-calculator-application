@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Frontend\API\CategoryController;
 use App\Http\Controllers\Frontend\API\ReportController;
 use App\Http\Controllers\Frontend\API\TransactionController;
@@ -23,16 +23,22 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
-    Route::get('/profile/{user}', [ProfileController::class, 'profile'])->name('profile.index');
-    Route::put('/profile/{user}', [ProfileController::class, 'updateProfile'])->name('profile.update');
-    Route::put('/password-update/{user}', [ProfileController::class, 'updatePassword'])->name('user.password.update');
+
+    Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
+        Route::get('/{user}', [UserController::class, 'profile'])->name('index');
+        Route::put('/{user}', [UserController::class, 'updateProfile'])->name('update');
+        Route::put('/password-update/{user}', [UserController::class, 'updatePassword'])->name('password.update');
+    });
+
+    Route::group(['prefix' => 'transactions', 'as' => 'transactions.'], function () {
+        Route::get('/', [TransactionController::class, 'getTransactions'])->name('list');
+        Route::post('/', [TransactionController::class, 'store'])->name('store');
+        Route::delete('/{transaction}', [TransactionController::class, 'destroy'])->name('destroy');
+        Route::put('/{transaction}', [TransactionController::class, 'update'])->name('update');
+        Route::get('/calculate-budget', [TransactionController::class, 'calculateBudget'])->name('calculate.budget');
+    });
+
     Route::get('/categories', [CategoryController::class, 'getCategories'])->name('categories');
-    Route::get('/transactions', [TransactionController::class, 'list'])->name('transactions.list');
-    Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
-    Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
-    Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transactions.update');
-    Route::get('/calculate/total-balance', [TransactionController::class, 'calculateTotalBalance'])->name('transactions.calculate.total-balance');
-    Route::post('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
 });
 
 

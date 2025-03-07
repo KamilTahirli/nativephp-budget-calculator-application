@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Frontend\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Frontend\CalculateTotalBalanceRequest;
+use App\Http\Requests\Frontend\CalculateBudgetRequest;
 use App\Http\Requests\Frontend\TransactionListRequest;
 use App\Http\Requests\Frontend\TransactionSaveOrUpdateRequest;
 use App\Models\Transaction;
 use App\Services\Frontend\API\TransactionService;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response as StatusCode;
 
 class TransactionController extends Controller
 {
@@ -24,16 +24,22 @@ class TransactionController extends Controller
     }
 
 
-    public function list(TransactionListRequest $request)
+    /**
+     * @param TransactionListRequest $request
+     * @return JsonResponse
+     */
+    public function getTransactions(TransactionListRequest $request): JsonResponse
     {
         try {
-            $transaction = $this->transactionService->getTransactions($request);
-            return $this->successResponse(data: $transaction);
+            $transactions = $this->transactionService->getTransactions($request);
+            $transactionView = $this->transactionService->transactionRenderView(['transactions' => $transactions]);
+            return $this->successResponse(data: $transactionView->render());
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
             return $this->errorResponse(__('site.response.an_error_occurred'));
         }
     }
+
 
     /**
      * @param TransactionSaveOrUpdateRequest $request
@@ -43,7 +49,8 @@ class TransactionController extends Controller
     {
         try {
             $transaction = $this->transactionService->createTransaction($request);
-            return $this->successResponse(__('site.response.transaction_added'), $transaction);
+            $transactionView = $this->transactionService->transactionRenderView(['transaction' => $transaction]);
+            return $this->successResponse(__('site.response.transaction_added'), $transactionView->render());
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
             return $this->errorResponse(__('site.response.an_error_occurred'));
@@ -51,30 +58,16 @@ class TransactionController extends Controller
     }
 
 
+    /**
+     * @param Transaction $transaction
+     * @return JsonResponse
+     */
     public function destroy(Transaction $transaction): JsonResponse
     {
         try {
-            if ($transaction->user_id !== auth()->id()) {
-                return $this->errorResponse(__('site.response.you_dont_have_permission'), 403);
-            }
-
-            $transaction->delete();
-            return $this->successResponse(data: $transaction);
-        } catch (Exception $exception) {
-            Log::error($exception->getMessage());
-            return $this->errorResponse(__('site.response.an_error_occurred'));
-        }
-    }
-
-    public function update(Transaction $transaction, TransactionSaveOrUpdateRequest $request): JsonResponse
-    {
-        try {
-            if ($transaction->user_id !== auth()->id()) {
-                return $this->errorResponse(__('site.response.you_dont_have_permission'), 403);
-            }
-
-            $transaction = $this->transactionService->updateTransaction($transaction, $request);
-            return $this->successResponse(__('site.response.transaction_updated'), $transaction);
+            $this->authorize('delete', $transaction);
+            $this->transactionService->deleteTransaction($transaction);
+            return $this->successResponse(__('site.response.transaction_deleted'), StatusCode::HTTP_NO_CONTENT);
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
             return $this->errorResponse(__('site.response.an_error_occurred'));
@@ -82,13 +75,32 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param CalculateTotalBalanceRequest $request
+     * @param Transaction $transaction
+     * @param TransactionSaveOrUpdateRequest $request
      * @return JsonResponse
      */
-    public function calculateTotalBalance(CalculateTotalBalanceRequest $request): JsonResponse
+    public function update(Transaction $transaction, TransactionSaveOrUpdateRequest $request): JsonResponse
     {
         try {
-            $transactions = $this->transactionService->calculateTotalBalance($request);
+            $this->authorize('update', $transaction);
+            $transactionView = $this->transactionService->transactionRenderView([
+                'transaction' => $this->transactionService->updateTransaction($transaction, $request)
+            ]);
+            return $this->successResponse(__('site.response.transaction_updated'), $transactionView);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            return $this->errorResponse(__('site.response.an_error_occurred'));
+        }
+    }
+
+    /**
+     * @param CalculateBudgetRequest $request
+     * @return JsonResponse
+     */
+    public function calculateBudget(CalculateBudgetRequest $request): JsonResponse
+    {
+        try {
+            $transactions = $this->transactionService->calculateBudget($request);
             return $this->successResponse(data: $transactions);
         } catch (Exception $exception) {
             Log::error($exception->getMessage());

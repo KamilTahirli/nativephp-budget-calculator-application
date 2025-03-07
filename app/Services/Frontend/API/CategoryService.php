@@ -2,18 +2,19 @@
 
 namespace App\Services\Frontend\API;
 
+use App\Interfaces\CategoryInterface;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoryService
 {
-    /**
-     * @param Request $request
-     * @return string
-     */
-    public function getCategories(Request $request): string
+
+    public function __construct(private readonly CategoryInterface $categoryRepository)
     {
-        $categories = Category::where('type', $request->type)->get();
-        return view('frontend.partials.render.__categories', compact('categories'))->render();
+    }
+
+    public function getCategories(Request $request)
+    {
+        return $this->categoryRepository->getCategoriesByType($request->input('type'));
     }
 }

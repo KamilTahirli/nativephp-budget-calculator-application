@@ -2,106 +2,87 @@
 
 namespace App\Services\Frontend\API;
 
-use App\Http\Requests\Frontend\CalculateTotalBalanceRequest;
+use App\Http\Requests\Frontend\CalculateBudgetRequest;
 use App\Http\Requests\Frontend\TransactionListRequest;
 use App\Http\Requests\Frontend\TransactionSaveOrUpdateRequest;
+use App\Interfaces\TransactionInterface;
 use App\Models\Transaction;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class TransactionService
+readonly class TransactionService
 {
 
     /**
-     * @param TransactionSaveOrUpdateRequest $request
-     * @return string
+     * @param TransactionInterface $transactionRepository
      */
-    public function createTransaction(TransactionSaveOrUpdateRequest $request): string
+    public function __construct(private TransactionInterface $transactionRepository)
     {
-        $transaction = Transaction::create([
-            'user_id' => auth()->user()->id,
-            'category_id' => $request->input('categoryId'),
-            'amount' => $request->input('amount'),
-            'memo' => $request->input('memo'),
-            'date' => $request->input('date') ?? now()->format('Y-m-d'),
-        ]);
-
-        $transaction->load(['category:id,name,icon_code,type']);
-
-        return view('frontend.partials.render.__transaction_item', compact('transaction'))->render();
-    }
-
-    /**
-     * @param Transaction $transaction
-     * @param TransactionSaveOrUpdateRequest $request
-     * @return string
-     */
-    public function updateTransaction(Transaction $transaction, TransactionSaveOrUpdateRequest $request): string
-    {
-        $transaction->update([
-            'user_id' => auth()->user()->id,
-            'category_id' => $request->input('categoryId'),
-            'amount' => $request->input('amount'),
-            'memo' => $request->input('memo'),
-            'date' => $request->input('date') ?? now()->format('Y-m-d'),
-        ]);
-
-        $transaction->load(['category:id,name,icon_code,type']);
-
-        return view('frontend.partials.render.__transaction_item', compact('transaction'))->render();
     }
 
 
     /**
      * @param TransactionListRequest $request
-     * @param bool $collection
-     * @param bool $render
      * @return mixed
      */
-    public function getTransactions(Request $request, bool $collection = false, bool $render = true): mixed
+    public function getTransactions(TransactionListRequest $request): mixed
     {
-        $transactions = Transaction::where('user_id', auth()->user()->id)
-            ->whereDate('date', $request->input('date'))
-            ->orderBy('date', 'desc')
-            ->with('category:id,name,icon_code,type')
-            ->get();
-
-        if ($collection) {
-            return $transactions;
-        }
-        $view = view('frontend.partials.render.__transaction_item', compact('transactions'));
-        if (!$render) {
-            return $view;
-        }
-        return $view->render();
+        return $this->transactionRepository->getTransactionByDate($request->input('date'));
     }
 
 
     /**
-     * @param CalculateTotalBalanceRequest $request
+     * @param TransactionSaveOrUpdateRequest $request
+     * @return mixed
+     */
+    public function createTransaction(TransactionSaveOrUpdateRequest $request): mixed
+    {
+        $transaction = $this->transactionRepository->create($request);
+        $transaction->load(['category:id,name,icon_code,type']);
+        return $transaction;
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @return mixed
+     */
+    public function deleteTransaction(Transaction $transaction): mixed
+    {
+        return $this->transactionRepository->delete($transaction);
+    }
+
+
+    /**
+     * @param Transaction $transaction
+     * @param TransactionSaveOrUpdateRequest $request
+     * @return mixed
+     */
+    public function updateTransaction(Transaction $transaction, TransactionSaveOrUpdateRequest $request): mixed
+    {
+        return $this->transactionRepository->update($request, $transaction);
+    }
+
+
+    /**
+     * @param CalculateBudgetRequest $request
      * @return array
      */
-    public function calculateTotalBalance(CalculateTotalBalanceRequest $request): array
+    public function calculateBudget(CalculateBudgetRequest $request): array
     {
-        $calculationDate = $request->input('calculationDate');
-
-        $totals = Transaction::selectRaw("
-            SUM(CASE WHEN categories.type = 'income' THEN amount ELSE 0 END) AS incomeTotal,
-            SUM(CASE WHEN categories.type = 'expense' THEN amount ELSE 0 END) AS expenseTotal")
-            ->join('categories', 'transactions.category_id', '=', 'categories.id')
-            ->where('transactions.user_id', auth()->user()->id)
-            ->whereDate('transactions.date', $calculationDate)
-            ->first();
-
-
+        $budget = $this->transactionRepository->calculateBudgetByDate($request->input('calculationDate'));
         return [
-            'income' => $totals->incomeTotal,
-            'expense' => $totals->expenseTotal,
-            'balance' => $totals->incomeTotal + $totals->expenseTotal
+            'income' => $budget->incomeTotal ?? 0,
+            'expense' => $budget->expenseTotal ?? 0,
+            'balance' => $budget->incomeTotal + $budget->expenseTotal ?? 0
         ];
+    }
+
+    /**
+     * @param array $data
+     * @return View
+     */
+    public function transactionRenderView(array $data): View
+    {
+        return view('frontend.partials.render.__transaction_item', $data);
     }
 
 

@@ -27,7 +27,8 @@ class CategoryController extends Controller
     {
         try {
             $categories = $this->categoryService->getCategories($request);
-            return $this->successResponse(data: $categories);
+            $view = view('frontend.partials.render.__categories', compact('categories'));
+            return $this->successResponse(data: $view->render());
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
             return $this->errorResponse(__('site.response.an_error_occurred'));

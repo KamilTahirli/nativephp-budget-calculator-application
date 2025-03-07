@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\Common\ClearService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,17 +13,12 @@ use Illuminate\Support\Facades\Auth;
 class LogoutController extends Controller
 {
     /**
-     * @param Request $request
-     * @return Application|\Illuminate\Foundation\Application|RedirectResponse|Redirector
+     * @return RedirectResponse
      */
-    public function logout(Request $request): \Illuminate\Foundation\Application|Redirector|Application|RedirectResponse
+    public function logout(): RedirectResponse
     {
         Auth::logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
+        new ClearService()->clearUserSession();
         return redirect('/');
     }
 }
