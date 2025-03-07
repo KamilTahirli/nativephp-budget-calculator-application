@@ -62,7 +62,6 @@ These commands compile and package the application as a user-friendly desktop ap
 
 ### Preview:
 ![image](https://github.com/user-attachments/assets/81ab3a7a-d91f-4439-9058-ea85177190ff)
-![image](https://github.com/user-attachments/assets/93f3d3c8-4fe9-4f44-b541-1072696486ea)
 
 
-❗ <strong>If you encounter any issues, please report them in the <a href='https://github.com/YOUR_REPO/issues'>GitHub Issues</a> section or contribute by submitting a <a href='https://github.com/YOUR_REPO/pulls'>pull request</a>.</strong>
+❗ <strong>If you encounter any issues, please report them in the <a href='https://github.com/KamilTahirli/nativephp-budget-calculator-application/issues'>GitHub Issues</a> section or contribute by submitting a <a href='https://github.com/KamilTahirli/nativephp-budget-calculator-application/pulls'>pull request</a>.</strong>
