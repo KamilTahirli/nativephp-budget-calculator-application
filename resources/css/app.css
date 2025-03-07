@@ -1,5 +1,3 @@
-@import "sweetalert2/dist/sweetalert2.css";
-@import "sweetalert2/dist/sweetalert2.min.css";
 @import '../assets/frontend/css/style.css';
 @import '../assets/frontend/css/datepicker.material.css';
 @import '../assets/frontend/vendor/toastr/toastr.min.css';
